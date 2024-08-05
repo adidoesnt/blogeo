@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { urlencoded, json } from 'body-parser';
 import { healthRouter } from './routers';
-import { database } from 'utils';
+import { database } from 'components';
 
 const { PORT = 3000 } = process.env;
 
