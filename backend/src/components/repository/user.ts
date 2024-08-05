@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
-import { database } from 'utils';
-import { users, type NewUser, type User } from 'utils/database/schema';
+import { database } from 'components';
+import { users, type NewUser, type User } from 'components/database/schema';
 
 export const createUser = async (user: NewUser): Promise<User[] | null> => {
     try {

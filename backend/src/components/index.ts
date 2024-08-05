@@ -1,1 +1,1 @@
-export { default as database } from 'utils/database/init';
+export { default as database } from 'components/database/init';

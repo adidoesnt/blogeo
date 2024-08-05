@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
-import { database } from 'utils';
-import { posts, type NewPost, type Post } from 'utils/database/schema';
+import { database } from 'components';
+import { posts, type NewPost, type Post } from 'components/database/schema';
 
 export const createPost = async (post: NewPost): Promise<Post[] | null> => {
     try {

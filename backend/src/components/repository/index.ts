@@ -1,2 +1,2 @@
-export * as userRepository from 'utils/repository/user';
-export * as postRepository from 'utils/repository/post';
+export * as userRepository from 'components/repository/user';
+export * as postRepository from 'components/repository/post';
