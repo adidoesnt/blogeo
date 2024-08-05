@@ -8,6 +8,7 @@
     "format": "prettier --write \"src/**/*.ts\""
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/bun": "latest",
     "@types/cors": "^2.8.17",
     "@types/pg": "^8.11.6",
@@ -17,6 +18,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "drizzle-orm": "^0.32.2",
