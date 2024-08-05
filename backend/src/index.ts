@@ -21,5 +21,6 @@ app.use(errorHandler);
 
 app.listen(PORT, async () => {
     await database.init();
+    await database.migrate();
     console.log(`🚀 Server is running on port ${PORT}!`);
 });

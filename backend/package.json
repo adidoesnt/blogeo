@@ -5,7 +5,8 @@
   "scripts": {
     "start": "bun run src/index.ts",
     "dev": "bun --watch run src/index.ts",
-    "format": "prettier --write \"src/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\"",
+    "create-migration": "source .envrc && bunx drizzle-kit generate"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -21,6 +22,7 @@
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "drizzle-kit": "^0.23.2",
     "drizzle-orm": "^0.32.2",
     "express": "^4.19.2",
     "pg": "^8.12.0"

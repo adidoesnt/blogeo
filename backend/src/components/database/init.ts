@@ -1,5 +1,7 @@
 import { Client } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import { join } from 'path';
 
 const {
     DB_USER: user = 'postgres',
@@ -23,6 +25,12 @@ const db = {
         console.log('⏳ Connecting to database...');
         await client.connect();
         console.log('💽 Database connected.');
+    },
+    migrate: async () => {
+        console.log('⏳ Migrating database...');
+        const migrationsFolder = join(process.cwd(), './drizzle');
+        await migrate(db.client, { migrationsFolder });
+        console.log('💽 Database migrated.');
     },
 };
 
