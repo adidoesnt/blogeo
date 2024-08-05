@@ -6,13 +6,13 @@ export const createPost = async ({
     request,
     response,
     next,
-}: ControllerProps): Promise<void | Response> => {
+}: ControllerProps) => {
     try {
         const { body } = request;
         const post = await postService.createPost(body);
         if (post) {
             const { status, message } = RESPONSE.CREATED;
-            response.status(status).json({ status, message, post });
+            return response.status(status).json({ status, message, post });
         } else {
             const { status, message } = RESPONSE.BAD_REQUEST;
             const error: CustomError = new Error(message);

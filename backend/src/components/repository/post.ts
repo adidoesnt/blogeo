@@ -2,9 +2,13 @@ import { eq } from 'drizzle-orm';
 import { database } from 'components';
 import { posts, type NewPost, type Post } from 'components/database/schema';
 
-export const createPost = async (post: NewPost): Promise<Post[] | null> => {
+export const createPost = async (post: NewPost): Promise<Post | null> => {
     try {
-        return await database.client.insert(posts).values(post).returning();
+        return (
+            (
+                await database.client.insert(posts).values(post).returning()
+            ).shift() ?? null
+        );
     } catch (error) {
         console.error('Error creating post', error);
         return null;

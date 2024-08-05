@@ -2,9 +2,13 @@ import { eq } from 'drizzle-orm';
 import { database } from 'components';
 import { users, type NewUser, type User } from 'components/database/schema';
 
-export const createUser = async (user: NewUser): Promise<User[] | null> => {
+export const createUser = async (user: NewUser): Promise<User | null> => {
     try {
-        return await database.client.insert(users).values(user).returning();
+        return (
+            (
+                await database.client.insert(users).values(user).returning()
+            ).shift() ?? null
+        );
     } catch (error) {
         console.error('Error creating user', error);
         return null;

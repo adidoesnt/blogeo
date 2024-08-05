@@ -4,7 +4,7 @@ import { hash } from 'bcrypt';
 
 const { SALT_ROUNDS = 10 } = process.env;
 
-export const createUser = async (user: NewUser): Promise<User[] | null> => {
+export const createUser = async (user: NewUser): Promise<User | null> => {
     try {
         const { password } = user;
         user.password = await hash(password, Number(SALT_ROUNDS));
