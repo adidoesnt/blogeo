@@ -1,11 +1,11 @@
 import { useCallback, useContext, useState } from 'react';
 import { UserContext } from '../context/auth';
-import { logout } from '../utils/apiClient';
+import { createBlog, logout } from '../utils/apiClient';
 import { LoginModeContext } from '../context/loginMode';
 import CreatePostPopup from './CreatePostPopup';
 
 function CreateBlogForm() {
-    const { token, setIsLoggedIn, setToken, setUsername, hasBlog } =
+    const { token, setIsLoggedIn, setToken, setUsername, hasBlog, userId } =
         useContext(UserContext)!;
     const { setIsLogInMode } = useContext(LoginModeContext)!;
     const [isOpen, setIsOpen] = useState(false);
@@ -22,9 +22,13 @@ function CreateBlogForm() {
         }
     }, [token, setIsLoggedIn, setToken, setUsername, setIsLogInMode]);
 
-    const handleCreateBlog = useCallback(() => {
-        console.log('Create blog');
-    }, []);
+    const handleCreateBlog = useCallback(async () => {
+        try {
+            await createBlog(userId!);
+        } catch (error) {
+            console.error('Error sending blog creation request', error);
+        }
+    }, [userId]);
 
     const handleCreatePost = useCallback(() => {
         setIsOpen(true);

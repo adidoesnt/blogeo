@@ -87,3 +87,12 @@ export const createPost = async ({
         console.error('Error creating post', error);
     }
 };
+
+export const createBlog = async (userId: number) => {
+    try {
+        const response = await apiClient.post('/user/blog', { userId });
+        console.log('Sent blog creation request', response);
+    } catch (error) {
+        console.error('Error sending blog creation request', error);
+    }
+};

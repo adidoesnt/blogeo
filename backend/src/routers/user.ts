@@ -30,4 +30,12 @@ router.post('/logout', async (request, response, next) => {
     });
 });
 
+router.post('/blog', async (request, response, next) => {
+    return await userController.createBlog({
+        request,
+        response,
+        next,
+    });
+});
+
 export default router;

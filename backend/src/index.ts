@@ -4,6 +4,7 @@ import { urlencoded, json } from 'body-parser';
 import { healthRouter, userRouter, postRouter } from './routers';
 import { database } from 'components';
 import { errorHandler } from 'components/middleware/error';
+import { queue } from 'components/queue';
 
 const { PORT = 3000 } = process.env;
 
@@ -23,4 +24,5 @@ app.listen(PORT, async () => {
     await database.init();
     await database.migrate();
     console.log(`🚀 Server is running on port ${PORT}!`);
+    await queue.init();
 });

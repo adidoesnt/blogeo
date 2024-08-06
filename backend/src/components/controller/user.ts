@@ -4,6 +4,7 @@ import {
     type CustomError,
 } from 'components/controller/types';
 import { RESPONSE } from 'constants/response';
+import { userRepository } from 'components/repository';
 
 export const signup = async ({ request, response, next }: ControllerProps) => {
     try {
@@ -49,6 +50,21 @@ export const logout = async ({
     try {
         const { token } = request.body;
         await userService.logout(token);
+        const { status, message } = RESPONSE.OK;
+        return response.status(status).json({ status, message });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const createBlog = async ({
+    request,
+    response,
+    next,
+}: ControllerProps) => {
+    try {
+        const { body } = request;
+        await userService.createBlog(body);
         const { status, message } = RESPONSE.OK;
         return response.status(status).json({ status, message });
     } catch (error) {
