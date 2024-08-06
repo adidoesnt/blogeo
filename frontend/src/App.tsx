@@ -1,11 +1,11 @@
-import SignupForm from "./components/SignupForm";
+import { useContext } from 'react';
+import SignupForm from './components/SignupForm';
+import { UserContext } from './context/auth';
 
 function App() {
-    return (
-        <>
-            <SignupForm />
-        </>
-    );
+    const { isLoggedIn } = useContext(UserContext)!;
+
+    return <>{isLoggedIn ? null : <SignupForm />}</>;
 }
 
 export default App;

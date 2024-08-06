@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { signup } from '../utils/apiClient';
+import { UserContext } from '../context/auth';
 
 enum Type {
     USERNAME = 'Username',
@@ -9,6 +10,15 @@ enum Type {
 function SignupForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const { setIsLoggedIn } = useContext(UserContext)!;
+
+    const handleSignup = useCallback(async () => {
+        await signup({
+            username,
+            password,
+        });
+        setIsLoggedIn(true);
+    }, [setIsLoggedIn, password, username]);
 
     const handleChange = useCallback(
         (e: React.FormEvent<HTMLInputElement>, type: Type) => {
@@ -60,10 +70,7 @@ function SignupForm() {
             </div>
             <div
                 className="flex items-center p-2 bg-zinc-800 rounded-md mt-2"
-                onClick={signup.bind(null, {
-                    username,
-                    password,
-                })}
+                onClick={handleSignup}
             >
                 <button>Sign up</button>
             </div>
