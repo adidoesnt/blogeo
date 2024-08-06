@@ -2,6 +2,7 @@ import { BlogStatus, type User } from 'components/database/schema';
 import { queue } from 'components/queue';
 import { MessageType } from 'components/queue/queue';
 import { userRepository } from 'components/repository';
+import { default as deploy } from 'components/blog/deploy';
 
 export type DeployBlogParams = {
     userId: number;
@@ -41,7 +42,7 @@ export const deployBlogValidator = async (userId: number, handle: string) => {
 
 export const deployBlog = async (user: User, handle: string) => {
     console.log('Deploying blog...');
-    // TODO: deploy blog
+    await deploy(user);
     await queue.deleteMessage(handle);
     await userRepository.updateUser(user.id, {
         blogStatus: BlogStatus.DEPLOYING,
@@ -53,9 +54,27 @@ export const deployBlog = async (user: User, handle: string) => {
     console.log('Sent blog deployment status message');
 };
 
-export const blogDeploymentStatusHandler = async (userId: number, handle: string) => {
+export const blogDeploymentStatusHandler = async (
+    userId: number,
+    handle: string,
+) => {
     console.log('Checking blog deployment status...');
-    // TODO: check blog deployment status
-    // if successful, update blog deployment status and delete message
-    console.log('Blog deployment status checked');
+    const user = await userRepository.getUserById(userId);
+    if (!user) throw new Error('User not found');
+    const { blogStatus } = user;
+    switch (blogStatus) {
+        case BlogStatus.DEPLOYING:
+            console.log('Blog is pending');
+            return;
+        case BlogStatus.FAILED:
+            console.log('Blog failed to deploy');
+            await queue.deleteMessage(handle);
+            return;
+        case BlogStatus.DEPLOYED:
+            console.log('Blog deployed successfully');
+            await queue.deleteMessage(handle);
+            return;
+        default:
+            throw new Error('Invalid blog status');
+    }
 };

@@ -1,0 +1,1 @@
+export { default as bucketClient } from 'components/bucket/bucket';

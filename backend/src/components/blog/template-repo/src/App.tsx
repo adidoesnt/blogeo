@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { getUserPosts, Post } from './apiClient';
 import PostPopup from './PostPopup';
 
-const { USERNAME = 'dummy' } = import.meta.env;
+const { VITE_USERNAME = 'dummy' } = import.meta.env;
 
 function App() {
     const toFirstLetterUppercase = (str: string) =>
         str.charAt(0).toUpperCase() + str.slice(1);
-    const username = toFirstLetterUppercase(USERNAME);
+    const username = toFirstLetterUppercase(VITE_USERNAME);
 
     const [posts, setPosts] = useState<Post[]>([]);
 
