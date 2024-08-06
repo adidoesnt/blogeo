@@ -6,7 +6,8 @@
     "start": "bun run src/index.ts",
     "dev": "bun --watch run src/index.ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "generate": "bunx drizzle-kit generate"
+    "generate": "bunx drizzle-kit generate",
+    "queue": "chmod +x scripts/queue.sh && ./scripts/queue.sh"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
