@@ -4,6 +4,7 @@ export const users = pgTable('users', {
     id: serial('id').primaryKey(),
     username: text('username').notNull(),
     password: text('password').notNull(),
+    hasBlogRequest: boolean('hasBlogRequest').notNull().default(false),
     hasBlog: boolean('hasBlog').notNull().default(false),
 });
 
@@ -13,7 +14,7 @@ export const posts = pgTable('posts', {
     content: text('content').notNull(),
     userId: serial('user_id')
         .notNull()
-        .references(() => users.id),
+        .references(() => users.id, { onDelete: 'cascade' }),
 });
 
 export const tokens = pgTable('tokens', {
@@ -21,7 +22,7 @@ export const tokens = pgTable('tokens', {
     token: text('token').notNull(),
     userId: serial('user_id')
         .notNull()
-        .references(() => users.id),
+        .references(() => users.id, { onDelete: 'cascade' }),
     expired: boolean('expired').notNull().default(false),
 });
 

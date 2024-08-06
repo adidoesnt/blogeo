@@ -15,6 +15,8 @@ export type UserContextType = {
     setToken: React.Dispatch<React.SetStateAction<string | null>>;
     hasBlog: boolean;
     setHasBlog: React.Dispatch<React.SetStateAction<boolean>>;
+    hasBlogRequest: boolean;
+    setHasBlogRequest: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const UserContext = React.createContext<UserContextType | null>(null);
@@ -24,6 +26,7 @@ function UserContextProvider({ children }: Readonly<UserContextProviderProps>) {
     const [username, setUsername] = useState<string | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [hasBlog, setHasBlog] = useState(false);
+    const [hasBlogRequest, setHasBlogRequest] = useState(false);
     const [userId, setUserId] = useState<number | null>(null);
 
     const context = useMemo(
@@ -38,6 +41,8 @@ function UserContextProvider({ children }: Readonly<UserContextProviderProps>) {
             setHasBlog,
             userId,
             setUserId,
+            hasBlogRequest,
+            setHasBlogRequest,
         }),
         [
             isLoggedIn,
@@ -50,6 +55,8 @@ function UserContextProvider({ children }: Readonly<UserContextProviderProps>) {
             setHasBlog,
             userId,
             setUserId,
+            hasBlogRequest,
+            setHasBlogRequest,
         ],
     );
 

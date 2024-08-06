@@ -16,6 +16,7 @@ type User = {
     id: number;
     username: string;
     password: string;
+    hasBlogRequest: boolean;
     hasBlog: boolean;
     token: string;
 };
@@ -52,6 +53,7 @@ export const signup = async ({
             username: user.username,
             token: user.token,
             hasBlog: user.hasBlog,
+            hasBlogRequest: user.hasBlogRequest,
         };
     } catch (error) {
         console.error('Error completing signup', error);

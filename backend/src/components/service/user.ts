@@ -81,7 +81,7 @@ export const createBlog = async ({
             user,
             type: MessageType.DEPLOYMENT_REQUEST,
         });
-        await updateUser(userId, { hasBlog: true });
+        await updateUser(userId, { hasBlogRequest: true });
         return true;
     } catch (error) {
         console.error('Error enqueuing blog creation task for user', error);

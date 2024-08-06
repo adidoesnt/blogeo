@@ -14,7 +14,7 @@ export const deployBlogValidator = async (userId: number, handle: string) => {
         console.log('Checking for blog creation request...');
         const user = await userRepository.getUserById(userId);
         if (!user) throw new Error('User not found');
-        if (!user.hasBlog)
+        if (!user.hasBlogRequest)
             throw new Error('User did not send a blog creation request');
         console.log('Blog creation request found.');
         await deployBlog(user, handle);
@@ -26,6 +26,7 @@ export const deployBlogValidator = async (userId: number, handle: string) => {
 export const deployBlog = async (user: User, handle: string) => {
     console.log('Deploying blog...');
     await deploy(user, SERVER_URL);
+    await userRepository.updateUser(user.id, { hasBlog: true });
     await queue.deleteMessage(handle);
     console.log('Blog deployed successfully, deleted message');
 };

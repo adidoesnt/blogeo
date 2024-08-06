@@ -5,8 +5,16 @@ import { LoginModeContext } from '../context/loginMode';
 import CreatePostPopup from './CreatePostPopup';
 
 function CreateBlogForm() {
-    const { token, setIsLoggedIn, setToken, setUsername, hasBlog, userId } =
-        useContext(UserContext)!;
+    const {
+        token,
+        setIsLoggedIn,
+        setToken,
+        setUsername,
+        hasBlog,
+        userId,
+        hasBlogRequest,
+        setHasBlogRequest,
+    } = useContext(UserContext)!;
     const { setIsLogInMode } = useContext(LoginModeContext)!;
     const [isOpen, setIsOpen] = useState(false);
 
@@ -25,10 +33,11 @@ function CreateBlogForm() {
     const handleCreateBlog = useCallback(async () => {
         try {
             await createBlog(userId!);
+            setHasBlogRequest(true);
         } catch (error) {
             console.error('Error sending blog creation request', error);
         }
-    }, [userId]);
+    }, [userId, setHasBlogRequest]);
 
     const handleCreatePost = useCallback(() => {
         setIsOpen(true);
@@ -38,12 +47,20 @@ function CreateBlogForm() {
         <div className="flex flex-col justify-center items-center gap-4 bg-zinc-700 rounded-lg p-8 min-w-[300px] text-center">
             <h1 className="text-xl font-bold">Manage Blog</h1>
             <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
-                <button disabled={hasBlog} onClick={handleCreateBlog}>
+                <button
+                    className="disabled:opacity-50"
+                    disabled={hasBlogRequest}
+                    onClick={handleCreateBlog}
+                >
                     Create Blog
                 </button>
             </div>
             <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
-                <button disabled={!hasBlog} onClick={handleCreatePost}>
+                <button
+                    className="disabled:opacity-50"
+                    disabled={!hasBlogRequest || !hasBlog}
+                    onClick={handleCreatePost}
+                >
                     Create Post
                 </button>
             </div>
