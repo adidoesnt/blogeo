@@ -24,7 +24,7 @@ git clone https://github.com/adidoesnt/blogeo.git
 2. Install dependencies
 
 ```bash
-cd blogeo/backend
+cd backend
 bun install
 ```
 
