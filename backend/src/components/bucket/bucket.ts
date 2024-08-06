@@ -1,6 +1,9 @@
 import {
     CreateBucketCommand,
+    PutBucketPolicyCommand,
+    PutBucketWebsiteCommand,
     PutObjectCommand,
+    PutPublicAccessBlockCommand,
     S3Client,
 } from '@aws-sdk/client-s3';
 import fs from 'fs';
@@ -23,6 +26,24 @@ const s3Client = new S3Client({
     forcePathStyle: true,
 });
 
+const getContentType = (filePath: string): string => {
+    const ext = path.extname(filePath).toLowerCase();
+    switch (ext) {
+        case '.html':
+            return 'text/html';
+        case '.css':
+            return 'text/css';
+        case '.js':
+            return 'application/javascript';
+        case '.svg':
+            return 'image/svg+xml';
+        case '.json':
+            return 'application/json';
+        default:
+            return 'application/octet-stream';
+    }
+};
+
 const uploadFile = async (
     bucketName: string,
     filePath: string,
@@ -33,7 +54,7 @@ const uploadFile = async (
         Bucket: bucketName,
         Key: key,
         Body: fileContent,
-        ContentType: 'text/html',
+        ContentType: getContentType(filePath),
     };
 
     try {
@@ -49,7 +70,7 @@ const uploadDirectory = async (bucketName: string, directoryPath: string) => {
 
     for (const file of files) {
         const filePath = path.join(directoryPath, file);
-        const key = file;
+        const key = path.relative(directoryPath, filePath).replace(/\\/g, '/');
 
         if (fs.lstatSync(filePath).isDirectory()) {
             await uploadDirectory(bucketName, filePath);
@@ -71,6 +92,73 @@ export const createBucket = async (bucketName: string) => {
         return endpoint;
     } catch (err) {
         console.error('Error creating bucket:', err);
+    }
+};
+
+export const setupStaticHosting = async (bucketName: string) => {
+    try {
+        await s3Client.send(
+            new PutBucketWebsiteCommand({
+                Bucket: bucketName,
+                WebsiteConfiguration: {
+                    IndexDocument: {
+                        Suffix: 'index.html',
+                    },
+                    ErrorDocument: {
+                        Key: 'error.html',
+                    },
+                },
+            }),
+        );
+        console.log(`Successfully setup static hosting for ${bucketName}`);
+    } catch (err) {
+        console.error('Error setting up static hosting:', err);
+    }
+};
+
+export const allowPublicAccess = async (bucketName: string) => {
+    try {
+        await s3Client.send(
+            new PutPublicAccessBlockCommand({
+                Bucket: bucketName,
+                PublicAccessBlockConfiguration: {
+                    BlockPublicAcls: true,
+                    BlockPublicPolicy: true,
+                    IgnorePublicAcls: true,
+                    RestrictPublicBuckets: true,
+                },
+            }),
+        );
+        console.log(`Successfully allowed public access for ${bucketName}`);
+    } catch (err) {
+        console.error('Error allowing public access:', err);
+    }
+};
+
+export const allowReadAccessViaPolicy = async (bucketName: string) => {
+    try {
+        await s3Client.send(
+            new PutBucketPolicyCommand({
+                Bucket: bucketName,
+                Policy: JSON.stringify({
+                    Version: '2012-10-17',
+                    Statement: [
+                        {
+                            Sid: 'AllowPublicRead',
+                            Effect: 'Allow',
+                            Principal: '*',
+                            Action: 's3:GetObject',
+                            Resource: `arn:aws:s3:::${bucketName}/*`,
+                        },
+                    ],
+                }),
+            }),
+        );
+        console.log(
+            `Successfully allowed public read access for ${bucketName}`,
+        );
+    } catch (err) {
+        console.error('Error allowing public read access:', err);
     }
 };
 

@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { createBucket } from 'components/bucket/bucket';
+import { allowPublicAccess, allowReadAccessViaPolicy, createBucket, setupStaticHosting } from 'components/bucket/bucket';
 import { execSync } from 'child_process';
 import { bucketClient } from 'components/bucket';
 import {type User } from 'components/database/schema';
@@ -35,6 +35,9 @@ async function main(user: User, serverUrl: string) {
         writeEnvFile(username, serverUrl);
         const bucketName = `${username}-bucket`;
         await createBucket(bucketName);
+        await allowReadAccessViaPolicy(bucketName);
+        await allowPublicAccess(bucketName);
+        await setupStaticHosting(bucketName);
         buildTemplateRepo();
         const buildDirectoryPath = path.join(templateRepoPath, 'dist');
         await bucketClient.uploadDirectory(bucketName, buildDirectoryPath);
