@@ -25,12 +25,12 @@ function CreateBlogForm() {
     }, []);
 
     return (
-        <div className="flex flex-col justify-center items-center gap-4 bg-zinc-700 rounded-lg p-4">
-            <h1 className="text-xl font-bold flex self-start">Create Blog</h1>
-            <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-full">
+        <div className="flex flex-col justify-center items-center gap-4 bg-zinc-700 rounded-lg p-8 min-w-[300px] text-center">
+            <h1 className="text-xl font-bold">Create Blog</h1>
+            <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
                 <button onClick={handleCreateBlog}>Create blog</button>
             </div>
-            <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-full">
+            <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
                 <button onClick={handleLogout}>Log Out</button>
             </div>
         </div>
