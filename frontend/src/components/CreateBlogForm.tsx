@@ -39,7 +39,7 @@ function CreateBlogForm() {
                 </button>
             </div>
             <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
-                <button disabled={hasBlog} onClick={handleCreatePost}>
+                <button disabled={!hasBlog} onClick={handleCreatePost}>
                     Create Post
                 </button>
             </div>
