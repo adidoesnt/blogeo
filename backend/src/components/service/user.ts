@@ -1,9 +1,14 @@
 import { userRepository } from 'components/repository';
-import { type NewUser, type User } from 'components/database/schema';
+import {
+    BlogStatus,
+    type NewUser,
+    type User,
+} from 'components/database/schema';
 import { compare, hash } from 'bcrypt';
 import { tokenService } from '.';
 import { queue } from 'components/queue';
 import { updateUser } from 'components/repository/user';
+import { MessageType } from 'components/queue/queue';
 
 const { SALT_ROUNDS = 10 } = process.env;
 
@@ -73,11 +78,29 @@ export const createBlog = async ({
         if (!userId) throw new Error('Missing User ID');
         const user = await userRepository.getUserById(userId);
         if (!user) throw new Error('User not found');
-        await queue.sendMessage(user);
+        await queue.sendMessage({
+            user,
+            type: MessageType.DEPLOYMENT_REQUEST,
+        });
         await updateUser(userId, { hasBlog: true });
         return true;
     } catch (error) {
         console.error('Error enqueuing blog creation task for user', error);
         return false;
+    }
+};
+
+export const getUserBlogStatus = async (
+    userId: string | string[] | undefined,
+): Promise<BlogStatus> => {
+    try {
+        if (!userId || Array.isArray(userId) || isNaN(Number(userId)))
+            throw new Error('Invalid or missing User ID');
+        const user = await userRepository.getUserById(Number(userId));
+        if (!user) throw new Error('User not found');
+        return user.blogStatus as BlogStatus;
+    } catch (error) {
+        console.error('Error getting user blog status', error);
+        return BlogStatus.UNINITIALIZED;
     }
 };

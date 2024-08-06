@@ -38,4 +38,12 @@ router.post('/blog', async (request, response, next) => {
     });
 });
 
+router.get('/blog-status', async (request, response, next) => {
+    return await userController.getUserBlogStatus({
+        request,
+        response,
+        next,
+    });
+});
+
 export default router;

@@ -42,11 +42,7 @@ export const login = async ({ request, response, next }: ControllerProps) => {
     }
 };
 
-export const logout = async ({
-    request,
-    response,
-    next,
-}: ControllerProps) => {
+export const logout = async ({ request, response, next }: ControllerProps) => {
     try {
         const { token } = request.body;
         await userService.logout(token);
@@ -72,3 +68,19 @@ export const createBlog = async ({
     }
 };
 
+export const getUserBlogStatus = async ({
+    request,
+    response,
+    next,
+}: ControllerProps) => {
+    try {
+        const { userId } = request.query;
+        const blogStatus = await userService.getUserBlogStatus(
+            userId as string | string[] | undefined,
+        );
+        const { status, message } = RESPONSE.OK;
+        return response.status(status).json({ status, message, blogStatus });
+    } catch (error) {
+        next(error);
+    }
+};

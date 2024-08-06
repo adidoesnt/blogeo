@@ -1,10 +1,18 @@
 import { pgTable, serial, text, boolean } from 'drizzle-orm/pg-core';
 
+export enum BlogStatus {
+    UNINITIALIZED = 'UN',
+    DEPLOYING = 'IP',
+    DEPLOYED = 'CP',
+    FAILED = 'FA',
+}
+
 export const users = pgTable('users', {
     id: serial('id').primaryKey(),
     username: text('username').notNull(),
     password: text('password').notNull(),
     hasBlog: boolean('hasBlog').notNull().default(false),
+    blogStatus: text('blog_status').notNull().default(BlogStatus.UNINITIALIZED),
 });
 
 export const posts = pgTable('posts', {
