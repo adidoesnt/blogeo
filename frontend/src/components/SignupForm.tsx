@@ -19,6 +19,7 @@ function SignupForm({ loginMode }: SignupFormProps) {
         setIsLoggedIn,
         setUsername: setLoggedInUsername,
         setToken,
+        setHasBlog,
     } = useContext(UserContext)!;
     const { setIsLogInMode: setLoginMode } = useContext(LoginModeContext)!;
 
@@ -29,8 +30,9 @@ function SignupForm({ loginMode }: SignupFormProps) {
             loginMode,
         });
         if (!user) throw new Error('Signup failed');
-        const { username: loggedInUsername, token } = user;
+        const { username: loggedInUsername, token, hasBlog } = user;
         setLoggedInUsername(loggedInUsername);
+        setHasBlog(hasBlog);
         setToken(token);
         setIsLoggedIn(true);
     }, [
@@ -40,6 +42,7 @@ function SignupForm({ loginMode }: SignupFormProps) {
         setToken,
         setIsLoggedIn,
         loginMode,
+        setHasBlog,
     ]);
 
     const handleSwitch = useCallback(() => {

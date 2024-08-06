@@ -4,7 +4,7 @@ import { logout } from '../utils/apiClient';
 import { LoginModeContext } from '../context/loginMode';
 
 function CreateBlogForm() {
-    const { token, setIsLoggedIn, setToken, setUsername } =
+    const { token, setIsLoggedIn, setToken, setUsername, hasBlog } =
         useContext(UserContext)!;
     const { setIsLogInMode } = useContext(LoginModeContext)!;
 
@@ -24,11 +24,18 @@ function CreateBlogForm() {
         console.log('Create blog');
     }, []);
 
+    const handleCreatePost = useCallback(() => {
+        console.log('Create post');
+    }, []);
+
     return (
         <div className="flex flex-col justify-center items-center gap-4 bg-zinc-700 rounded-lg p-8 min-w-[300px] text-center">
-            <h1 className="text-xl font-bold">Create Blog</h1>
+            <h1 className="text-xl font-bold">Manage Blog</h1>
             <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
-                <button onClick={handleCreateBlog}>Create blog</button>
+                <button disabled={hasBlog} onClick={handleCreateBlog}>Create Blog</button>
+            </div>
+            <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
+                <button disabled={!hasBlog} onClick={handleCreatePost}>Create Post</button>
             </div>
             <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
                 <button onClick={handleLogout}>Log Out</button>

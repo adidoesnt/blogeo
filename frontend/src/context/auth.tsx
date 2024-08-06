@@ -11,6 +11,8 @@ export type UserContextType = {
     setUsername: React.Dispatch<React.SetStateAction<string | null>>;
     token: string | null;
     setToken: React.Dispatch<React.SetStateAction<string | null>>;
+    hasBlog: boolean;
+    setHasBlog: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const UserContext = React.createContext<UserContextType | null>(null);
@@ -19,6 +21,7 @@ function UserContextProvider({ children }: Readonly<UserContextProviderProps>) {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState<string | null>(null);
     const [token, setToken] = useState<string | null>(null);
+    const [hasBlog, setHasBlog] = useState(false);
 
     const context = useMemo(
         () => ({
@@ -28,8 +31,19 @@ function UserContextProvider({ children }: Readonly<UserContextProviderProps>) {
             setUsername,
             token,
             setToken,
+            hasBlog,
+            setHasBlog,
         }),
-        [isLoggedIn, token, username, setIsLoggedIn, setUsername, setToken],
+        [
+            isLoggedIn,
+            token,
+            username,
+            setIsLoggedIn,
+            setUsername,
+            setToken,
+            hasBlog,
+            setHasBlog,
+        ],
     );
 
     return (
