@@ -23,3 +23,31 @@ export const createPost = async ({
         next(error);
     }
 };
+
+export const getPosts = async ({
+    request,
+    response,
+    next,
+}: ControllerProps) => {
+    try {
+        const { username } = request.query;
+        if (!username || Array.isArray(username)) {
+            const { status, message } = RESPONSE.BAD_REQUEST;
+            const error: CustomError = new Error(message);
+            error.status = status;
+            throw error;
+        }
+        const posts = await postService.getPostsByUsername(String(username));
+        if (posts) {
+            const { status, message } = RESPONSE.OK;
+            return response.status(status).json({ status, message, posts });
+        } else {
+            const { status, message } = RESPONSE.BAD_REQUEST;
+            const error: CustomError = new Error(message);
+            error.status = status;
+            throw error;
+        }
+    } catch (error) {
+        next(error);
+    }
+};

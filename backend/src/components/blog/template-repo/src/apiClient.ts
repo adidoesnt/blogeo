@@ -30,7 +30,7 @@ const apiClient = axios.create({
 
 export const getUserPosts = async (username: string) => {
     try {
-        const response = await apiClient.get(`/user/${username}/posts`);
+        const response = await apiClient.get(`/posts?username=${username}`);
         const { posts } = response.data;
         console.log('Fetched user posts', posts);
         return posts as Post[];
