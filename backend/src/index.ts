@@ -14,7 +14,7 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 
 app.use(healthRouter);
-app.use(userRouter);
+app.use('/user', userRouter);
 app.use(postRouter);
 
 app.use(errorHandler);

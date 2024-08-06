@@ -12,6 +12,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/bun": "latest",
     "@types/cors": "^2.8.17",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/pg": "^8.11.6",
     "prettier": "^3.3.3"
   },
@@ -25,6 +26,7 @@
     "drizzle-kit": "^0.23.2",
     "drizzle-orm": "^0.32.2",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0"
   }
 }

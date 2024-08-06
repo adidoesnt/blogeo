@@ -31,6 +31,24 @@ export const getUserById = async (id: number): Promise<User | null> => {
     }
 };
 
+export const getUserByUsername = async (
+    username: string,
+): Promise<User | null> => {
+    try {
+        return (
+            (
+                await database.client
+                    .select()
+                    .from(users)
+                    .where(eq(users.username, username))
+            ).shift() ?? null
+        );
+    } catch (error) {
+        console.error('Error getting user by username', error);
+        return null;
+    }
+};
+
 export const updateUser = async (
     id: number,
     user: Partial<NewUser>,

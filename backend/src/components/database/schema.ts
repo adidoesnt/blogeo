@@ -16,8 +16,20 @@ export const posts = pgTable('posts', {
         .references(() => users.id),
 });
 
+export const tokens = pgTable('tokens', {
+    id: serial('id').primaryKey(),
+    token: text('token').notNull(),
+    userId: serial('user_id')
+        .notNull()
+        .references(() => users.id),
+    expired: boolean('expired').notNull().default(false),
+});
+
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 
 export type Post = typeof posts.$inferSelect;
 export type NewPost = typeof posts.$inferInsert;
+
+export type Token = typeof tokens.$inferSelect;
+export type NewToken = typeof tokens.$inferInsert;
