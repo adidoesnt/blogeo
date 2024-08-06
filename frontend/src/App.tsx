@@ -1,7 +1,9 @@
+import SignupForm from "./components/SignupForm";
+
 function App() {
     return (
         <>
-            <h1 className="font-bold text-xl">Placeholder</h1>
+            <SignupForm />
         </>
     );
 }
