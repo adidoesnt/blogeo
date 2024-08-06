@@ -29,6 +29,10 @@ const apiClient = axios.create({
     },
 });
 
+export const setAuthHeader = (token: string | null) => {
+    apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+};
+
 export const signup = async ({
     username,
     password,
@@ -42,6 +46,7 @@ export const signup = async ({
         });
         const user = response.data.user as User;
         console.log('Completed signup for user', user);
+        setAuthHeader(user.token);
         return {
             userId: user.id,
             username: user.username,
@@ -58,6 +63,7 @@ export const logout = async (token: string) => {
         const response = await apiClient.post('/user/logout', {
             token,
         });
+        setAuthHeader(null);
         console.log('Completed logout', response);
     } catch (error) {
         console.error('Error completing logout', error);
