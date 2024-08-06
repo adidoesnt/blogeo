@@ -66,3 +66,31 @@ export const createBlog = async ({
         next(error);
     }
 };
+
+export const getUserBlogStatus = async ({
+    request,
+    response,
+    next,
+}: ControllerProps) => {
+    try {
+        const { username } = request.query;
+        if (!username || Array.isArray(username)) {
+            const { status, message } = RESPONSE.BAD_REQUEST;
+            const error: CustomError = new Error(message);
+            error.status = status;
+            throw error;
+        } else {
+            const blogStatus = await userService.getUserBlogStatus(username as string);
+            if (!blogStatus) {
+                const { status, message } = RESPONSE.NOT_FOUND;
+                const error: CustomError = new Error(message);
+                error.status = status;
+                throw error;
+            }   
+            const { status, message } = RESPONSE.OK;
+            return response.status(status).json({ status, message, blogStatus });
+        }
+    } catch (error) {
+        next(error);
+    }
+};

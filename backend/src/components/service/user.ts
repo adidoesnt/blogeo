@@ -1,8 +1,5 @@
 import { userRepository } from 'components/repository';
-import {
-    type NewUser,
-    type User,
-} from 'components/database/schema';
+import { type NewUser, type User } from 'components/database/schema';
 import { compare, hash } from 'bcrypt';
 import { tokenService } from '.';
 import { queue } from 'components/queue';
@@ -86,5 +83,20 @@ export const createBlog = async ({
     } catch (error) {
         console.error('Error enqueuing blog creation task for user', error);
         return false;
+    }
+};
+
+export const getUserBlogStatus = async (username: string) => {
+    try {
+        const user = await userRepository.getUserByUsername(username);
+        if (!user) throw new Error('User not found');
+        const { hasBlogRequest, hasBlog } = user;
+        return {
+            hasBlogRequest,
+            hasBlog,
+        };
+    } catch (error) {
+        console.error('Error getting user blog status', error);
+        return null;
     }
 };

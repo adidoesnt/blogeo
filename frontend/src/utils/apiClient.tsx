@@ -98,3 +98,14 @@ export const createBlog = async (userId: number) => {
         console.error('Error sending blog creation request', error);
     }
 };
+
+export const getUserBlogStatus = async (username: string) => {
+    try {
+        const response = await apiClient.get(`/user/blog-status?username=${username}`);
+        const { blogStatus } = response.data;
+        console.log('Fetched user blog status', blogStatus);
+        return blogStatus;
+    } catch (error) {
+        console.error('Error getting user blog status', error);
+    }
+};

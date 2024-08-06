@@ -1,8 +1,10 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/auth';
-import { createBlog, logout } from '../utils/apiClient';
+import { createBlog, getUserBlogStatus, logout } from '../utils/apiClient';
 import { LoginModeContext } from '../context/loginMode';
 import CreatePostPopup from './CreatePostPopup';
+
+const { VITE_BLOG_STATUS_INTERVAL = 30 } = import.meta.env;
 
 function CreateBlogForm() {
     const {
@@ -13,10 +15,32 @@ function CreateBlogForm() {
         hasBlog,
         userId,
         hasBlogRequest,
+        setHasBlog,
         setHasBlogRequest,
+        username,
     } = useContext(UserContext)!;
     const { setIsLogInMode } = useContext(LoginModeContext)!;
     const [isOpen, setIsOpen] = useState(false);
+
+    const fetchBlogStatus = useCallback(async () => {
+        try {
+            const blogStatus = await getUserBlogStatus(username!);
+            console.log('Fetched blog status', blogStatus);
+            setHasBlogRequest(blogStatus.hasBlogRequest);
+            setHasBlog(blogStatus.hasBlog);
+        } catch (error) {
+            console.error('Error fetching blog status', error);
+        }
+    }, [username, setHasBlogRequest, setHasBlog]);
+
+    useEffect(() => {
+        fetchBlogStatus().then(() =>
+            setInterval(
+                fetchBlogStatus,
+                Number(VITE_BLOG_STATUS_INTERVAL) * 1000,
+            ),
+        );
+    }, [fetchBlogStatus]);
 
     const handleLogout = useCallback(async () => {
         try {
