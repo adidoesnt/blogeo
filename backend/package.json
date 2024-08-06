@@ -6,7 +6,7 @@
     "start": "bun run src/index.ts",
     "dev": "bun --watch run src/index.ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "generate": "source .envrc && bunx drizzle-kit generate"
+    "generate": "bunx drizzle-kit generate"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

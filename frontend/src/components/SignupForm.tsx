@@ -1,24 +1,42 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { signup } from '../utils/apiClient';
 import { UserContext } from '../context/auth';
+import { LoginModeContext } from '../context/loginMode';
 
 enum Type {
     USERNAME = 'Username',
     PASSWORD = 'Password',
 }
 
-function SignupForm() {
+export type SignupFormProps = {
+    loginMode?: boolean;
+};
+
+function SignupForm({ loginMode }: SignupFormProps) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const { setIsLoggedIn } = useContext(UserContext)!;
+    const {
+        setIsLoggedIn,
+        setUsername: setLoggedInUsername,
+        setToken,
+    } = useContext(UserContext)!;
+    const { setIsLogInMode: setLoginMode } = useContext(LoginModeContext)!;
 
-    const handleSignup = useCallback(async () => {
-        await signup({
+    const handleSubmit = useCallback(async () => {
+        const user = await signup({
             username,
             password,
         });
+        if (!user) throw new Error('Signup failed');
+        const { username: loggedInUsername, token } = user;
+        setLoggedInUsername(loggedInUsername);
+        setToken(token);
         setIsLoggedIn(true);
-    }, [setIsLoggedIn, password, username]);
+    }, [username, password, setLoggedInUsername, setToken, setIsLoggedIn]);
+
+    const handleSwitch = useCallback(() => {
+        setLoginMode(!loginMode);
+    }, [loginMode, setLoginMode]);
 
     const handleChange = useCallback(
         (e: React.FormEvent<HTMLInputElement>, type: Type) => {
@@ -38,7 +56,9 @@ function SignupForm() {
 
     return (
         <div className="p-10 m-4 flex flex-col justify-center items-center gap-4 bg-zinc-700 rounded-lg">
-            <h1 className="text-xl font-bold flex self-start">Sign Up</h1>
+            <h1 className="text-xl font-bold flex self-start">
+                {loginMode ? 'Log In' : 'Sign Up'}
+            </h1>
             <div className="flex flex-col justify-center gap-2">
                 <span>{Type.USERNAME}</span>
                 <input
@@ -63,10 +83,16 @@ function SignupForm() {
                 />
             </div>
             <div
-                className="flex items-center p-2 bg-zinc-800 rounded-md mt-2"
-                onClick={handleSignup}
+                className="flex flex-col justify-center p-2 bg-zinc-800 rounded-md mt-2 w-[50%]"
+                onClick={handleSubmit}
             >
-                <button>Sign up</button>
+                <button>{loginMode ? 'Log In' : 'Sign Up'}</button>
+            </div>
+            <div
+                className="flex flex-col justify-center p-2 bg-zinc-100 text-zinc-700 rounded-md mt-2 w-[50%]"
+                onClick={handleSwitch}
+            >
+                <button>{loginMode ? 'Sign Up' : 'Log In'}</button>
             </div>
         </div>
     );
