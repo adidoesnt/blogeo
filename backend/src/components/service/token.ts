@@ -1,7 +1,7 @@
 import { tokenRepository, userRepository } from 'components/repository';
 import jwt from 'jsonwebtoken';
 
-const { JWT_SECRET = 'DUMMY-SECRET' } = process.env;
+const { JWT_SECRET = 'DUMMY-SECRET', JWT_EXPIRY = 60 } = process.env;
 
 export type CreateTokenParams = {
     userId: number;
@@ -13,11 +13,16 @@ export const createToken = async ({
     username,
 }: CreateTokenParams): Promise<string | null> => {
     try {
-        const token = jwt.sign({ userId, username }, JWT_SECRET);
+        const expiresIn = Number(JWT_EXPIRY) * 60;
+        const expiresInMs = expiresIn * 1000;
+        const token = jwt.sign({ userId, username }, JWT_SECRET, {
+            expiresIn,
+        });
         await tokenRepository.createToken({
             userId,
             token,
         });
+        setTimeout(expireToken.bind(null, token), expiresInMs);
         return token;
     } catch (error) {
         console.error('Error creating token', error);
