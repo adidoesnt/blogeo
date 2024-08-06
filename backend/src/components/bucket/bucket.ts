@@ -66,7 +66,9 @@ export const createBucket = async (bucketName: string) => {
                 Bucket: bucketName,
             }),
         );
+        const endpoint = `${s3Client.config.endpoint}/${bucketName}`;
         console.log(`Successfully created bucket ${bucketName}`);
+        return endpoint;
     } catch (err) {
         console.error('Error creating bucket:', err);
     }

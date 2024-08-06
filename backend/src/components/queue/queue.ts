@@ -1,8 +1,5 @@
 import { SQS } from '@aws-sdk/client-sqs';
-import {
-    deployBlogValidator,
-    blogDeploymentStatusHandler,
-} from 'components/blog/deployer';
+import { deployBlogValidator } from 'components/blog/deployer';
 import type { User } from 'components/database/schema';
 
 const {
@@ -13,7 +10,6 @@ const {
 
 export enum MessageType {
     DEPLOYMENT_REQUEST = 'DEPLOYMENT_REQUEST',
-    DEPLOYMENT_STATUS = 'DEPLOYMENT_STATUS',
 }
 
 const queue = new SQS({
@@ -56,10 +52,6 @@ export const pullMessages = async () => {
                     case MessageType.DEPLOYMENT_REQUEST:
                         console.log('Received deployment request message');
                         await deployBlogValidator(user.id, handle!);
-                        break;
-                    case MessageType.DEPLOYMENT_STATUS:
-                        console.log('Received deployment status check message');
-                        await blogDeploymentStatusHandler(user.id, handle!);
                         break;
                     default:
                         throw new Error('Unknown message type');

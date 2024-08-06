@@ -3,18 +3,15 @@ import fs from 'fs';
 import { createBucket } from 'components/bucket/bucket';
 import { execSync } from 'child_process';
 import { bucketClient } from 'components/bucket';
-import { userRepository } from 'components/repository';
-import { BlogStatus, type User } from 'components/database/schema';
-
-const { SERVER_URL = 'DUMMY_SERVER_URL' } = process.env;
+import {type User } from 'components/database/schema';
 
 const templateRepoPath = path.join(
     process.cwd(),
     './src/components/blog/template-repo',
 );
 
-const writeEnvFile = (username: string) => {
-    const envContent = `VITE_USERNAME=${username}\nVITE_SERVER_URL=${SERVER_URL}`;
+const writeEnvFile = (username: string, serverUrl: string) => {
+    const envContent = `VITE_USERNAME=${username}\nVITE_SERVER_URL=${serverUrl}`;
     const envFilePath = path.join(templateRepoPath, '.env');
     fs.writeFileSync(envFilePath, envContent);
     console.log('.env file written successfully.');
@@ -27,32 +24,23 @@ const deleteEnvFile = () => {
 };
 
 const buildTemplateRepo = () => {
-    try {
-        execSync('bun install', { cwd: templateRepoPath, stdio: 'inherit' });
-        execSync('bun run build', { cwd: templateRepoPath, stdio: 'inherit' });
-        console.log('Template repo built successfully.');
-    } catch (error) {
-        console.error('Error building template repo:', error);
-    }
+    execSync('bun install', { cwd: templateRepoPath, stdio: 'inherit' });
+    execSync('bun run build', { cwd: templateRepoPath, stdio: 'inherit' });
+    console.log('Template repo built successfully.');
 };
 
-async function main(user: User) {
-    const { id: userId, username } = user;
+async function main(user: User, serverUrl: string) {
     try {
-        writeEnvFile(username);
-        createBucket(`${username}-bucket`);
+        const { username } = user;
+        writeEnvFile(username, serverUrl);
+        const bucketName = `${username}-bucket`;
+        await createBucket(bucketName);
         buildTemplateRepo();
         const buildDirectoryPath = path.join(templateRepoPath, 'dist');
-        await bucketClient.uploadDirectory(username, buildDirectoryPath);
-        await userRepository.updateUser(userId, {
-            blogStatus: BlogStatus.DEPLOYED,
-        });
+        await bucketClient.uploadDirectory(bucketName, buildDirectoryPath);
         deleteEnvFile();
     } catch (error) {
         console.error('Error deploying blog:', error);
-        await userRepository.updateUser(userId, {
-            blogStatus: BlogStatus.FAILED,
-        });
     }
 }
 
