@@ -12,6 +12,7 @@ The frontend is built with [Bun](https://bun.sh), [React](https://reactjs.org/),
 
 - [Bun](https://bun.sh)
 - [PostgreSQL](https://www.postgresql.org/)
+- [Docker](https://www.docker.com/)
 
 ### Installation
 
