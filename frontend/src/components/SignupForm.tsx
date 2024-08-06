@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { signup } from '../utils/apiClient';
 import { UserContext } from '../context/auth';
 
@@ -36,13 +36,6 @@ function SignupForm() {
         [],
     );
 
-    const hiddenPassword = useMemo(() => {
-        return password
-            .split('')
-            .map(() => '•')
-            .join('');
-    }, [password]);
-
     return (
         <div className="p-10 m-4 flex flex-col justify-center items-center gap-4 bg-zinc-700 rounded-lg">
             <h1 className="text-xl font-bold flex self-start">Sign Up</h1>
@@ -61,7 +54,8 @@ function SignupForm() {
                 <span>{Type.PASSWORD}</span>
                 <input
                     className="flex p-2 rounded-md bg-zinc-100 text-black"
-                    value={hiddenPassword}
+                    value={password}
+                    type={Type.PASSWORD.toLowerCase()}
                     onChange={(e: React.FormEvent<HTMLInputElement>) => {
                         handleChange(e, Type.PASSWORD);
                     }}
