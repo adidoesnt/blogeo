@@ -107,6 +107,27 @@ bun run dev
 open http://localhost:5173
 ```
 
+## Walkthrough
+1. Sign up for a new account (or login if you already have one)
+<video width="320" height="240" controls>
+  <source src="./assets/signup.mov" type="video/mp4">
+</video>
+
+2. Create a new blog
+<video width="320" height="240" controls>
+  <source src="./assets/createblog.mov" type="video/mp4">
+</video>
+
+3. Wait for the blog to be deployed, and make some posts
+<video width="320" height="240" controls>
+  <source src="./assets/makeposts.mov" type="video/mp4">
+</video>
+
+4. View the posts in the blog
+<video width="320" height="240" controls>
+  <source src="./assets/viewposts.mov" type="video/mp4">
+</video>
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
