@@ -6,6 +6,12 @@ export type SignupParams = {
     loginMode?: boolean;
 };
 
+export type CreatePostParams = {
+    userId: number;
+    title: string;
+    content: string;
+};
+
 type User = {
     id: number;
     username: string;
@@ -37,6 +43,7 @@ export const signup = async ({
         const user = response.data.user as User;
         console.log('Completed signup for user', user);
         return {
+            userId: user.id,
             username: user.username,
             token: user.token,
             hasBlog: user.hasBlog,
@@ -54,5 +61,23 @@ export const logout = async (token: string) => {
         console.log('Completed logout', response);
     } catch (error) {
         console.error('Error completing logout', error);
+    }
+};
+
+export const createPost = async ({
+    userId,
+    title,
+    content,
+}: CreatePostParams) => {
+    try {
+        const response = await apiClient.post('/post', {
+            userId,
+            title,
+            content,
+        });
+        const { post } = response.data;
+        console.log('Created post', post);
+    } catch (error) {
+        console.error('Error creating post', error);
     }
 };

@@ -1,12 +1,14 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { UserContext } from '../context/auth';
 import { logout } from '../utils/apiClient';
 import { LoginModeContext } from '../context/loginMode';
+import CreatePostPopup from './CreatePostPopup';
 
 function CreateBlogForm() {
     const { token, setIsLoggedIn, setToken, setUsername, hasBlog } =
         useContext(UserContext)!;
     const { setIsLogInMode } = useContext(LoginModeContext)!;
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleLogout = useCallback(async () => {
         try {
@@ -25,21 +27,26 @@ function CreateBlogForm() {
     }, []);
 
     const handleCreatePost = useCallback(() => {
-        console.log('Create post');
+        setIsOpen(true);
     }, []);
 
     return (
         <div className="flex flex-col justify-center items-center gap-4 bg-zinc-700 rounded-lg p-8 min-w-[300px] text-center">
             <h1 className="text-xl font-bold">Manage Blog</h1>
             <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
-                <button disabled={hasBlog} onClick={handleCreateBlog}>Create Blog</button>
+                <button disabled={hasBlog} onClick={handleCreateBlog}>
+                    Create Blog
+                </button>
             </div>
             <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
-                <button disabled={!hasBlog} onClick={handleCreatePost}>Create Post</button>
+                <button disabled={hasBlog} onClick={handleCreatePost}>
+                    Create Post
+                </button>
             </div>
             <div className="flex flex-col justify-center p-2 bg-zinc-800 text-zinc-100 rounded-md mt-2 w-[50%]">
                 <button onClick={handleLogout}>Log Out</button>
             </div>
+            <CreatePostPopup isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
     );
 }
