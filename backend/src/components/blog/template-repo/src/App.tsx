@@ -12,8 +12,8 @@ function App() {
     const [posts, setPosts] = useState<Post[]>([]);
 
     const getPosts = useCallback(async () => {
-        return await getUserPosts(username);
-    }, [username]);
+        return await getUserPosts(VITE_USERNAME);
+    }, []);
 
     useEffect(() => {
         getPosts().then((fetchedPosts) => {
