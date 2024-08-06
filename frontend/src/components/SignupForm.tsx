@@ -26,13 +26,21 @@ function SignupForm({ loginMode }: SignupFormProps) {
         const user = await signup({
             username,
             password,
+            loginMode,
         });
         if (!user) throw new Error('Signup failed');
         const { username: loggedInUsername, token } = user;
         setLoggedInUsername(loggedInUsername);
         setToken(token);
         setIsLoggedIn(true);
-    }, [username, password, setLoggedInUsername, setToken, setIsLoggedIn]);
+    }, [
+        username,
+        password,
+        setLoggedInUsername,
+        setToken,
+        setIsLoggedIn,
+        loginMode,
+    ]);
 
     const handleSwitch = useCallback(() => {
         setLoginMode(!loginMode);
@@ -88,11 +96,10 @@ function SignupForm({ loginMode }: SignupFormProps) {
             >
                 <button>{loginMode ? 'Log In' : 'Sign Up'}</button>
             </div>
-            <div
-                className="flex flex-col justify-center p-2 bg-zinc-100 text-zinc-700 rounded-md mt-2 w-[50%]"
-                onClick={handleSwitch}
-            >
-                <button>{loginMode ? 'Sign Up' : 'Log In'}</button>
+            <div className="flex flex-col justify-center p-2 bg-zinc-100 text-zinc-700 rounded-md mt-2 w-[50%]">
+                <button onClick={handleSwitch}>
+                    {loginMode ? 'Sign Up' : 'Log In'}
+                </button>
             </div>
         </div>
     );

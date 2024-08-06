@@ -19,4 +19,12 @@ router.post('/login', async (request, response, next) => {
     });
 });
 
+router.post('/logout', async (request, response, next) => {
+    return await userController.logout({
+        request,
+        response,
+        next,
+    });
+});
+
 export default router;

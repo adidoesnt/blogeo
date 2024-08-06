@@ -3,6 +3,7 @@ import axios from 'axios';
 export type SignupParams = {
     username: string;
     password: string;
+    loginMode?: boolean;
 };
 
 type User = {
@@ -22,9 +23,14 @@ const apiClient = axios.create({
     },
 });
 
-export const signup = async ({ username, password }: SignupParams) => {
+export const signup = async ({
+    username,
+    password,
+    loginMode,
+}: SignupParams) => {
     try {
-        const response = await apiClient.post('/user', {
+        const path = loginMode ? '/user/login' : '/user/signup';
+        const response = await apiClient.post(path, {
             username,
             password,
         });
@@ -37,5 +43,16 @@ export const signup = async ({ username, password }: SignupParams) => {
         };
     } catch (error) {
         console.error('Error completing signup', error);
+    }
+};
+
+export const logout = async (token: string) => {
+    try {
+        const response = await apiClient.post('/user/logout', {
+            token,
+        });
+        console.log('Completed logout', response);
+    } catch (error) {
+        console.error('Error completing logout', error);
     }
 };

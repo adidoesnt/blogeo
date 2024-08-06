@@ -41,3 +41,18 @@ export const login = async ({ request, response, next }: ControllerProps) => {
     }
 };
 
+export const logout = async ({
+    request,
+    response,
+    next,
+}: ControllerProps) => {
+    try {
+        const { token } = request.body;
+        await userService.logout(token);
+        const { status, message } = RESPONSE.OK;
+        return response.status(status).json({ status, message });
+    } catch (error) {
+        next(error);
+    }
+};
+
